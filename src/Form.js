@@ -3,16 +3,16 @@ import React from "react";
 const Form = (props) => {
   const { onSubmit, onChange, values, disabled, errors } = props;
 
-  const changeHandler = (evt) => {
-    const { name, value, checked, type } = evt.target;
-    const valueToUse = type === "checkbox" ? checked : value;
-
-    onChange(name, valueToUse);
-  };
-
   const submitHandler = (evt) => {
     evt.preventDefault();
     onSubmit();
+  };
+
+  const changeHandler = (evt) => {
+    const { name, checked, type } = evt.target;
+    let value = type === "checkbox" ? checked : evt.target.value;
+
+    onChange(name, value);
   };
 
   return (
@@ -51,16 +51,15 @@ const Form = (props) => {
         <label>
           {" "}
           Agree terms of services
-          <input type="checkbox" name="terms" value={values.terms} onChange={changeHandler} />
+          <input type="checkbox" name="terms" checked={values.terms} onChange={changeHandler} />
         </label>
 
         <button disabled={disabled}> submit </button>
         <div className="errors">
-          {/* 🔥 RENDER THE VALIDATION ERRORS HERE */}
-          <div>{errors.first_name}</div>
-          <div>{errors.last_name}</div>
-          <div>{errors.email}</div>
-          <div>{errors.terms}</div>
+          <p>{errors.first_name}</p>
+          <p>{errors.last_name}</p>
+          <p>{errors.email}</p>
+          <p>{errors.terms}</p>
         </div>
       </form>
       <div>

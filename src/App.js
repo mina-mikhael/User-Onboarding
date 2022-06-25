@@ -13,14 +13,14 @@ const initialFormValues = {
   last_name: "",
   email: "",
   password: "",
-  terms: "",
+  terms: false,
 };
 const initialFormErrors = {
   first_name: "",
   last_name: "",
   email: "",
   password: "",
-  terms: "",
+  terms: false,
 };
 const initialFriends = [];
 const initialDisabled = true;
@@ -45,7 +45,7 @@ function App() {
 
   const postNewFriend = (newFriend) => {
     axios
-      .post("https://reqres.in/api/users/")
+      .post("https://reqres.in/api/users/", newFriend)
       .then((res) => {
         console.log("post  :", res);
         setFriends([...friends, res.data]);
@@ -57,9 +57,12 @@ function App() {
   const validate = (name, value) => {
     yup
       .reach(schema, name)
-      .validate(name, value)
+      .validate(value)
       .then(() => setFormErrors({ ...formErrors, [name]: "" }))
-      .catch((err) => setFormErrors({ ...formErrors, [name]: err.errors[0] }));
+      .catch((err) => {
+        setFormErrors({ ...formErrors, [name]: err.errors[0] });
+        // console.log(err);
+      });
   };
 
   ///////////// -- event handlers-- /////////////
@@ -74,6 +77,7 @@ function App() {
       last_name: formValues.last_name.trim(),
       password: formValues.password,
       email: formValues.email.trim(),
+      terms: formValues.terms,
     };
     postNewFriend(newFriend);
   };
@@ -83,12 +87,18 @@ function App() {
   }, []);
 
   useEffect(() => {
-    schema.isValid(formValues).then((valid) => setDisabled(!valid));
+    schema.isValid(formValues).then((enabled) => setDisabled(!enabled));
   }, [formValues]);
 
   return (
     <div className="App">
       <Forms values={formValues} onChange={changeHandler} onSubmit={submitHandler} disabled={disabled} errors={formErrors} />
+      <div className="errors">
+        <p>{formErrors.first_name}</p>
+        <p>{formErrors.last_name}</p>
+        <p>{formErrors.email}</p>
+        <p>{formErrors.terms}</p>
+      </div>
       {friends.map((frnd) => {
         return (
           <div key={frnd.id}>
