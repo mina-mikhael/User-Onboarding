@@ -93,12 +93,7 @@ function App() {
   return (
     <div className="App">
       <Forms values={formValues} onChange={changeHandler} onSubmit={submitHandler} disabled={disabled} errors={formErrors} />
-      <div className="errors">
-        <p>{formErrors.first_name}</p>
-        <p>{formErrors.last_name}</p>
-        <p>{formErrors.email}</p>
-        <p>{formErrors.terms}</p>
-      </div>
+
       {friends.map((frnd) => {
         return (
           <div key={frnd.id}>
